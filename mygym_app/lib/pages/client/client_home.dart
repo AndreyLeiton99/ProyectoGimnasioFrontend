@@ -14,7 +14,7 @@ class UsersPage extends StatelessWidget {
    userProvider.loadPublicUserResponseList();
     return  Scaffold(
       appBar: AppBar(
-        title: const Text("Lista de Personas", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold, ), ),
+        title: const Text("Clientes", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold, ), ),
         centerTitle: true,
         leading: IconButton(onPressed: () {
           authProvider.logout();
