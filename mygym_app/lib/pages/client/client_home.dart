@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mygym_app/models/login_response.dart';
 import 'package:mygym_app/models/user_response.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
@@ -6,7 +7,11 @@ import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class UsersPage extends StatelessWidget {
-  const UsersPage({super.key});
+  //! Se pone el parametro opcional initialUser para pasarle el usuario actual al componente
+  const UsersPage({super.key, this.initialUser});
+
+  // TODO: Siempre verificar si el initialUser no es null
+  final Usuario? initialUser; 
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,8 @@ class UsersPage extends StatelessWidget {
    userProvider.loadPublicUserResponseList();
     return  Scaffold(
       appBar: AppBar(
-        title: const Text("Clientes", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold, ), ),
+        title: Text('${initialUser != null ? initialUser!.username : 'Bienvenido/a cliente'} ',
+          style: const TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold, ), ),
         centerTitle: true,
         leading: IconButton(onPressed: () async {
           localStorageProvider.deleteToken();
@@ -30,25 +36,28 @@ class UsersPage extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 30),
-          child: ListView.builder(
-            itemCount: userProvider.userResponseList.length,
-            itemBuilder: (context, index) {
-              final user = userProvider.userResponseList[index];
-              return ListTile(
-                title: Center(
-                  child: Column(
-                    children: [
-                      userBuilder(user, context),
-                    ],
-                  )),
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => PersonaDetailsPage(persona: user)) 
-                  // );
-                },
-              );
-            }
+
+          child: FutureBuilder<List<Curso>>(
+            future: userProvider.getCoursesForUser(initialUser!.id), // Fetch cursos
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final cursos = snapshot.data!;
+                // Display users in a ListView
+                return ListView.builder(
+                  itemCount: cursos.length,
+                  itemBuilder: (context, index) {
+                    final curso = cursos[index];
+                    // TODO: Aqui se reemplaza el disenio de la tarjeta
+                    return userBuilder(curso, context);
+                  },
+                );
+              } else if (snapshot.hasError) {
+                print('Error loading users: ${snapshot.error}');
+                return const Center(child: Text('Error cargando usuarios'));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
         )
       )
@@ -56,7 +65,8 @@ class UsersPage extends StatelessWidget {
   }
 }
 
-Widget userBuilder(User user, BuildContext context){
+// TODO: Componente para mostrar los disenios
+Widget userBuilder(Curso curso, BuildContext context){
   return Card(
       color: const Color.fromARGB(255, 23, 190, 154),
       shadowColor: const Color.fromARGB(255, 7, 61, 50),
@@ -64,15 +74,15 @@ Widget userBuilder(User user, BuildContext context){
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(5))),
       child: SizedBox(
-          height: 100,
-          width: 200,
+          height: 200,
+          width: 150,
           child: Center(
               child: 
                 Column(
                   children: [
                     const SizedBox(height: 10,),
                     Text(
-                      user.username,
+                      curso.nombreCurso,
                       style: const TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -89,7 +99,7 @@ Widget userBuilder(User user, BuildContext context){
                           //   MaterialPageRoute(builder: (context) => PersonaDetailsPage(persona: user)) 
                           // );
                           },
-                          child: const Text('Ver más', style: TextStyle(color: Colors.black),),
+                          child: const Text('Ver QR', style: TextStyle(color: Colors.black, fontSize: 15),),
                         ),
                       )
             ],
@@ -98,27 +108,3 @@ Widget userBuilder(User user, BuildContext context){
         )
     );
 }
-
-
-
-
-
-// import 'package:flutter/material.dart';
-
-// class ClientHome extends StatelessWidget {
-//   const ClientHome({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Clientes"),
-//         centerTitle: true,
-//         leading: IconButton(onPressed: () => Navigator.pushReplacementNamed(context, '/logout'), icon: const Icon(Icons.logout)),
-//       ),
-//       body: const Center(
-//         child: Text("Pantalla de Inicio de Cliente"),
-//       ),
-//     );
-//   }
-// }

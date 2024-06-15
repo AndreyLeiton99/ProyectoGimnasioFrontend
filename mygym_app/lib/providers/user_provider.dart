@@ -42,6 +42,35 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  // Obtiene los cursos de un usuario por su ID
+  Future<List<Curso>> getCoursesForUser(int userId) async {
+    // Construye la URL de la API para recuperar los cursos del usuario especificado.
+    final url = Uri.parse('$baseURL/api/users/$userId?populate=*');
+    // Envia una solicitud GET a la URL de la API construida.
+    final response = await http.get(url);
+
+    // Procesa la respuesta de la API
+    if (response.statusCode == 200) {
+      // Decodifica el cuerpo de la respuesta JSON
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+      // Extrae la lista de cursos de los datos de esa respuesta.
+      final coursesList = responseData['cursos'] as List<dynamic>;
+      // Convierte cada objeto JSON de curso en un objeto Curso.
+      final convertedCourses = coursesList.map((courseJson) => Curso.fromJson(courseJson)).toList();
+
+      // Devuelve la lista de Cursos asociados al User.
+      return convertedCourses;
+    } else {
+      // Maneja el error de la solicitud de la API.
+      print('Error cargando cursos para el usuario $userId: ${response.statusCode}');
+
+      // Devuelve una lista vacia en caso de error.
+      return [];
+    }
+  }
+
+
+
   // Busca un usuario por su ID en la lista cargada
   User getUserById(int id) {
     // Utiliza el método firstWhere para encontrar el primer usuario con el ID deseado

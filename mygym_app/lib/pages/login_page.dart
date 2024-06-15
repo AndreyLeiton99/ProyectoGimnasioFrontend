@@ -5,7 +5,6 @@ import 'package:mygym_app/pages/admin/admin_home.dart';
 import 'package:mygym_app/pages/client/client_home.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
-import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,8 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
-
-  List<String> rol = ['client', 'admin'];
 
   @override
   void dispose() {
@@ -139,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
       Token token = Token(jwtToken: user.jwt, username: user.user.username);
       isarProvider.save(token);
 
-      verificarRol(context, userProvider, user.jwt);
+      verificarRol(context, userProvider, user);
 
       // Update provider state and navigate or display success message
     } else {
@@ -159,21 +156,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Future<void> verificarRol(context, userProvider, jwt) async {
-    // List<String> rol = ['client', 'admin'];
-    // Random random = Random();
-    // int index = random.nextInt(rol.length);
-    // // devuelve el rol, por ahora es random para hacer las pruebas
-    // return rol[index];
-
-    String role = await userProvider.getRole(jwt);
+  Future<void> verificarRol(context, userProvider, VerifiedUser user) async {
+    String role = await userProvider.getRole(user.jwt);
 
     print('role: $role');
 
     if(role == 'Public') {
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const ClientHome())));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const UsersPage())));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => UsersPage(initialUser: user.user,))));
     }else if(role == 'Authenticated'){
+      // TODO: Agregar el parametro de usuario a AdminHome()
       Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const AdminHome())));
     }else{
       // todo: aqui implementar mensaje de error de "acceso no autorizado"

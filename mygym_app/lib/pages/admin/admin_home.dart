@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/token.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:provider/provider.dart';

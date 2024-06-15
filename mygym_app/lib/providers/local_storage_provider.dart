@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:mygym_app/models/token.dart';
 import 'package:mygym_app/services/local_database.dart';
  
