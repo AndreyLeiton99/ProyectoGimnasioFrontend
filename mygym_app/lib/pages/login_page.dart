@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/login_response.dart';
+import 'package:mygym_app/models/token.dart';
 import 'package:mygym_app/pages/admin/admin_home.dart';
 import 'package:mygym_app/pages/client/client_home.dart';
+import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<AuthProvider>();
+    final isarProvider = context.read<LocalStorageProvider>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Iniciar sesión'),
@@ -107,21 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                           _isLoading = false;
                           // Aqui implementar funcionalidad para detectar ROL
 
-                          handleLogin(context, userProvider, _emailController, _passwordController);
-
-                          // String rol = verificarRol();
-                          // // TODO: cambiar esto para que verifique un inicio de sesion correcto y rol:
-                          // rol = 'client';
-                          // print('rol: $rol');
-                          // if(rol == 'client') {
-                          //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const ClientHome())));
-                          //   Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const UsersPage())));
-                          // }else if(rol == 'admin'){
-                          //   Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const AdminHome())));
-                          // }else{
-                          //   // todo: aqui implementar mensaje de error de "acceso no autorizado"
-                          // }
-
+                          handleLogin(context, userProvider, _emailController, _passwordController, isarProvider);
 
                         });
                       });
@@ -137,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> handleLogin(context, userProvider, email, password) async {
+  Future<void> handleLogin(context, userProvider, email, password, isarProvider) async {
     print("Credenciales: ${email.text}    &    ${password.text}");
     // se pasan las credenciales al metodo en el provider para su verificacion
     final resultado = await userProvider.loginUser(email.text, password.text);
@@ -147,6 +134,10 @@ class _LoginPageState extends State<LoginPage> {
       final user = resultado as VerifiedUser; // Cast to VerifiedUser
       print('USUARIO: ${user.user.username} verificado con exito');
       print('Token: ${user.jwt}');
+
+      // Se guarda el Token en la DB de Isar
+      Token token = Token(jwtToken: user.jwt, username: user.user.username);
+      isarProvider.save(token);
 
       verificarRol(context, userProvider, user.jwt);
 

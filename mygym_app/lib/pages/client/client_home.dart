@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/user_response.dart';
+import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +12,16 @@ class UsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
    final userProvider = context.watch<UserProvider>();
    final authProvider = context.watch<AuthProvider>();
+   final localStorageProvider = context.read<LocalStorageProvider>();
    userProvider.loadPublicUserResponseList();
     return  Scaffold(
       appBar: AppBar(
         title: const Text("Clientes", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold, ), ),
         centerTitle: true,
-        leading: IconButton(onPressed: () {
+        leading: IconButton(onPressed: () async {
+          localStorageProvider.deleteToken();
           authProvider.logout();
+          // Si el usuario selecciona el icono de Logout, cierra sesion y borra credenciales
           Navigator.pushReplacementNamed(context, '/logout');
         }, icon: const Icon(Icons.logout)),
         backgroundColor: const Color.fromARGB(255, 23, 190, 154),
