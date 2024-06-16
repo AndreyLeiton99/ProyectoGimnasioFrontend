@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/login_response.dart';
 import 'package:mygym_app/models/user_response.dart';
+import 'package:mygym_app/pages/client/qr_client.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
@@ -48,7 +49,7 @@ class UsersPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final curso = cursos[index];
                     // TODO: Aqui se reemplaza el disenio de la tarjeta
-                    return userBuilder(curso, context);
+                    return cursoBuilder(curso, context, initialUser);
                   },
                 );
               } else if (snapshot.hasError) {
@@ -66,7 +67,7 @@ class UsersPage extends StatelessWidget {
 }
 
 // TODO: Componente para mostrar los disenios
-Widget userBuilder(Curso curso, BuildContext context){
+Widget cursoBuilder(Curso curso, BuildContext context, Usuario? initialUser){
   return Card(
       color: const Color.fromARGB(255, 23, 190, 154),
       shadowColor: const Color.fromARGB(255, 7, 61, 50),
@@ -94,10 +95,10 @@ Widget userBuilder(Curso curso, BuildContext context){
                         padding: const EdgeInsets.only(top: 6),
                         child: ElevatedButton(
                           onPressed: () {
-                          //   Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => PersonaDetailsPage(persona: user)) 
-                          // );
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => QRPage(curso: curso, initialUser: initialUser,)) 
+                          );
                           },
                           child: const Text('Ver QR', style: TextStyle(color: Colors.black, fontSize: 15),),
                         ),
