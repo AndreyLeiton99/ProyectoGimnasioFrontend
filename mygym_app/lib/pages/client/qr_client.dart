@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/login_response.dart';
-import 'package:mygym_app/models/user_response.dart';
+import 'package:mygym_app/models/course_model.dart';
+import 'package:mygym_app/models/user_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class QRPage extends StatelessWidget {
-  const QRPage({super.key, this.initialUser, this.curso});
+  const QRPage({super.key, this.initialUser, this.courses});
 
-  final Usuario? initialUser; 
-  final Curso? curso; 
+  final User? initialUser; 
+  final Course? courses; 
 
   @override
   Widget build(BuildContext context) {
-    String userUUID = generateUUIDFromCourseAndUser(curso?.nombreCurso, initialUser?.username, initialUser?.email);
+    String userUUID = generateUUIDFromCourseAndUser(courses?.courseName, initialUser?.username, initialUser?.email);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("QR Asistencia"),
+        title: const Text("QR Attendance"),
         centerTitle: true,
       ),
       body: Center(
@@ -25,7 +25,6 @@ class QRPage extends StatelessWidget {
           size: 200.0,
         ),
       ),
-
     );
   }
 }

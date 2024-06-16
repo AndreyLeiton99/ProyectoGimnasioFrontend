@@ -35,19 +35,19 @@ class CourseInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildProgressCard(
-                    title: 'Cursos matriculados',
+                    title: 'Courses matriculados',
                     number: '5',
                     gradientColors: [Colors.orange, Colors.orangeAccent],
                   ),
                   const SizedBox(width: 10),
                   _buildProgressCard(
-                    title: 'Cursos disponibles',
+                    title: 'Courses disponibles',
                     number: '10',
                     gradientColors: [Colors.red, Colors.redAccent],
                   ),
                   const SizedBox(width: 10),
                   _buildProgressCard(
-                    title: 'Cursos congelados',
+                    title: 'Courses congelados',
                     number: '2',
                     gradientColors: [Colors.purple, Colors.purpleAccent],
                   ),

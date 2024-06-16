@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/login_response.dart';
-import 'package:mygym_app/models/user_response.dart';
-import 'package:mygym_app/pages/client/qr_client.dart';
+import 'package:mygym_app/models/user_model.dart'; // Importa el modelo de Course
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
-import 'package:mygym_app/widgets/course_info_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
+import '../../models/course_model.dart';
+import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
 import 'courses_list_page.dart';
+import 'qr_client.dart';
 
-class UsersPage extends StatelessWidget {
-  const UsersPage({super.key, this.initialUser});
+class ClientHome extends StatelessWidget {
+  const ClientHome({super.key, this.initialUser});
 
-  final Usuario? initialUser;
+  final User? initialUser;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,8 @@ class UsersPage extends StatelessWidget {
           children: <Widget>[
             Column(
               children: [
-                _buildAppBar(context, initialUser, authProvider,
-                    localStorageProvider), // Espacio de 50 pixeles
+                _buildAppBar(
+                    context, initialUser, authProvider, localStorageProvider),
                 Expanded(
                   child: _buildMainListViewUI(context, userProvider),
                 ),
@@ -48,11 +48,10 @@ class UsersPage extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, Usuario? initialUser,
+  PreferredSizeWidget _buildAppBar(BuildContext context, User? initialUser,
       AuthProvider authProvider, LocalStorageProvider localStorageProvider) {
     return PreferredSize(
-      preferredSize:
-          const Size.fromHeight(90.0), // Ajustar el tamaño según sea necesario
+      preferredSize: const Size.fromHeight(90.0),
       child: Column(
         children: <Widget>[
           Container(
@@ -133,11 +132,11 @@ class UsersPage extends StatelessWidget {
   }
 
   Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider) {
-    return FutureBuilder<List<Curso>>(
+    return FutureBuilder<List<Course>>(
       future: userProvider.getCoursesForUser(initialUser!.id),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final cursos = snapshot.data!;
+          final courses = snapshot.data!;
           return ListView(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top,
@@ -146,13 +145,13 @@ class UsersPage extends StatelessWidget {
             children: [
               _buildTitleView('Mi progreso', 'Ver más'),
               _buildCourseInfoCard(),
-              _buildTitleView('Cursos de hoy', 'Ver Todos'),
-              _buildCursosCarousel(cursos, context),
-              _buildViewAllCoursesButton(context, cursos),
-              _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
-              // Hacer lista de cursos en los que no estoy matriculado
-              _buildCursosCarousel(cursos, context),
-              _buildViewAllCoursesButton(context, cursos),
+              _buildTitleView('courses de hoy', 'Ver Todos'),
+              _buildCoursesCarousel(courses, context),
+              _buildViewAllCoursesButton(context, courses),
+              _buildTitleView('courses disponibles para matrícula', 'Ver Todos'),
+              // Hacer lista de courses en los que no estoy matriculado
+              _buildCoursesCarousel(courses, context),
+              _buildViewAllCoursesButton(context, courses),
             ],
           );
         } else if (snapshot.hasError) {
@@ -164,21 +163,21 @@ class UsersPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCursosCarousel(List<Curso> cursos, BuildContext context) {
+  Widget _buildCoursesCarousel(List<Course> courses, BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: cursos.length,
+        itemCount: courses.length,
         itemBuilder: (context, index) {
-          final curso = cursos[index];
-          return cursoBuilder(curso, context, initialUser);
+          final course = courses[index];
+          return CourseBuilder(course, context, initialUser);
         },
       ),
     );
   }
 
-  Widget _buildViewAllCoursesButton(BuildContext context, List<Curso> cursos) {
+  Widget _buildViewAllCoursesButton(BuildContext context, List<Course> courses) {
     return Column(
       children: [
         Center(
@@ -187,16 +186,16 @@ class UsersPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                      builder: (context) => ListViewCoursesPage(
-                        cursos: cursos // Aquí deberías pasar la lista de cursos reales
-                      ),
-                    ),
+                  builder: (context) => ListViewCoursesPage(
+                    courses: courses,
+                  ),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 23, 190, 154),
             ),
-            child: const Text('Ver todos los cursos',
+            child: const Text('Ver todos los courses',
                 style: TextStyle(color: Colors.white)),
           ),
         ),
@@ -212,16 +211,16 @@ class UsersPage extends StatelessWidget {
     );
   }
 
-  Widget cursoBuilder(Curso curso, BuildContext context, Usuario? initialUser) {
+  Widget CourseBuilder(Course course, BuildContext context, User? initialUser) {
     Color cardColor;
-    switch (curso.nombreCurso) {
+    switch (course.courseName) {
       case 'Yoga':
         cardColor = Colors.blue[400]!;
         break;
       case 'Pilates':
         cardColor = Colors.green[400]!;
         break;
-      case 'Curso C':
+      case 'Course C':
         cardColor = Colors.orange[400]!;
         break;
       default:
@@ -235,7 +234,7 @@ class UsersPage extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => QRPage(
-              curso: curso,
+              courses: course,
               initialUser: initialUser,
             ),
           ),
@@ -280,7 +279,7 @@ class UsersPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        curso.nombreCurso,
+                        course.courseName,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: GymAppTheme.fontName,
@@ -298,7 +297,7 @@ class UsersPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Día: ${getDayName(curso.date.weekday)} \nCapacidad: ${curso.capacity} \nInstructor: ', // Ejemplo de información adicional
+                                'Día: ${getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
                                 style: const TextStyle(
                                   fontFamily: GymAppTheme.fontName,
                                   fontWeight: FontWeight.w500,
@@ -337,7 +336,7 @@ class UsersPage extends StatelessWidget {
                 child: Icon(
                   Icons.fitness_center,
                   color: Colors.white,
-                ), // Ajusta el path de la imagen según tus necesidades
+                ),
               ),
             )
           ],

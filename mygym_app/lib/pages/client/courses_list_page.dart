@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../../models/user_response.dart';
+import '../../models/course_model.dart';
 
 class ListViewCoursesPage extends StatelessWidget {
-  final List<Curso> cursos;
+  final List<Course> courses;
 
-  ListViewCoursesPage({required this.cursos});
+  const ListViewCoursesPage({required this.courses});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todos los cursos'),
+        title: const Text('Todos los courses'),
       ),
       body: ListView.builder(
-        itemCount: cursos.length,
+        itemCount: courses.length,
         itemBuilder: (context, index) {
           return CourseCard(
-            curso: cursos[index],
+            course: courses[index],
           );
         },
       ),
@@ -26,9 +26,9 @@ class ListViewCoursesPage extends StatelessWidget {
 }
 
 class CourseCard extends StatelessWidget {
-  final Curso curso;
+  final Course course;
 
-  CourseCard({required this.curso});
+  const CourseCard({required this.course});
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +49,16 @@ class CourseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _buildTitle(curso.nombreCurso),
+            _buildTitle(course.courseName),
             const SizedBox(height: 16),
             _buildInfoRow(
-              leftText: curso.description,
+              leftText: course.description,
               rightText: 'Instructor: ',
             ),
             const SizedBox(height: 16),
             _buildDivider(),
             const SizedBox(height: 16),
-            _buildMeasurementRow('Detalles del curso', ''),
+            _buildMeasurementRow('Detalles del Course', ''),
           ],
         ),
       ),

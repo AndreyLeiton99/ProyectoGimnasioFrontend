@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           '/logout': (context) => const HomePage(),
           '/login': (context) => const LoginPage(),
           // '/client': (context) => const ClientHome(),
-          '/client': (context) => const UsersPage(),
+          '/client': (context) => const ClientHome(),
           '/admin': (context) => const AdminHome(),
         },
         home: const HomePage(),

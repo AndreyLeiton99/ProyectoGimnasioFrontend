@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:mygym_app/models/login_response.dart';
+import 'package:mygym_app/models/user_model.dart';
 
 // TODO: Revisar en cada provider si se incluyen en en main.dart en MultiProvider
 class AuthProvider extends ChangeNotifier {
@@ -13,7 +14,7 @@ class AuthProvider extends ChangeNotifier {
   String? accessToken;
 
   // Guarda el usuario actual de la session
-  Usuario? currentUser;
+  User? currentUser;
 
   // Método para iniciar sesión con las credenciales enviadas
   Future<VerifiedUser?> loginUser(String email, String password) async {

@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if(role == 'Public') {
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const ClientHome())));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => UsersPage(initialUser: user.user,))));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => ClientHome(initialUser: user.user,))));
     }else if(role == 'Authenticated'){
       // TODO: Agregar el parametro de usuario a AdminHome()
       Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const AdminHome())));

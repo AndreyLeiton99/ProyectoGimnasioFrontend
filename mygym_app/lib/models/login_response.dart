@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'user_model.dart';
+
 class VerifiedUser {
     final String jwt;
-    final Usuario user;
+    final User user;
 
     VerifiedUser({
         required this.jwt,
@@ -15,7 +17,7 @@ class VerifiedUser {
 
     factory VerifiedUser.fromJson(Map<String, dynamic> json) => VerifiedUser(
         jwt: json["jwt"],
-        user: Usuario.fromJson(json["user"]),
+        user: User.fromJson(json["user"]),
     );
 
     Map<String, dynamic> toJson() => {
