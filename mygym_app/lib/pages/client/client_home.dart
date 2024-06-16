@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 import '../../widgets/title_view.dart';
+import 'courses_list_page.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key, this.initialUser});
@@ -145,13 +146,13 @@ class UsersPage extends StatelessWidget {
             children: [
               _buildTitleView('Mi progreso', 'Ver más'),
               _buildCourseInfoCard(),
-              _buildTitleView('Cursos de hoy', 'Detalles'),
+              _buildTitleView('Cursos de hoy', 'Ver Todos'),
               _buildCursosCarousel(cursos, context),
-              _buildViewAllCoursesButton(context),
-              _buildTitleView('Cursos disponnibles para matrícula', 'Detalles'),
+              _buildViewAllCoursesButton(context, cursos),
+              _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
               // Hacer lista de cursos en los que no estoy matriculado
               _buildCursosCarousel(cursos, context),
-              _buildViewAllCoursesButton(context),
+              _buildViewAllCoursesButton(context, cursos),
             ],
           );
         } else if (snapshot.hasError) {
@@ -177,13 +178,20 @@ class UsersPage extends StatelessWidget {
     );
   }
 
-  Widget _buildViewAllCoursesButton(BuildContext context) {
+  Widget _buildViewAllCoursesButton(BuildContext context, List<Curso> cursos) {
     return Column(
       children: [
         Center(
           child: ElevatedButton(
             onPressed: () {
-              // Navegar a la pantalla de todos los cursos
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                      builder: (context) => ListViewCoursesPage(
+                        cursos: cursos // Aquí deberías pasar la lista de cursos reales
+                      ),
+                    ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 23, 190, 154),
@@ -358,7 +366,7 @@ class UsersPage extends StatelessWidget {
   }
 
   Widget _buildCourseInfoCard() {
-    return CourseInfoCard();
+    return const CourseInfoCard();
   }
 
   String getDayName(int weekday) {
