@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/user_response/user_model.dart'; // Importa el modelo de Course
+import 'package:mygym_app/pages/client/courses_complete_list_page.dart';
 import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
@@ -184,7 +185,7 @@ class ClientHome extends StatelessWidget {
               _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
               // Hacer lista de courses en los que no estoy matriculado
               _buildCoursesCompleteCarousel(allCourses, context),
-              _buildViewAllCoursesButton(context, courses),
+              _buildViewAllCoursesCompleteButton(context, allCourses),
             ],
           );
         } else if (snapshot.hasError) {
@@ -234,6 +235,33 @@ class ClientHome extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ListViewCoursesPage(
+                    courses: courses,
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 23, 190, 154),
+            ),
+            child: const Text('Ver todos los cursos',
+                style: TextStyle(color: Colors.white)),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildViewAllCoursesCompleteButton(BuildContext context, List<CourseComplete> courses) {
+    return Column(
+      children: [
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ListViewCoursesCompletePage(
                     courses: courses,
                   ),
                 ),
