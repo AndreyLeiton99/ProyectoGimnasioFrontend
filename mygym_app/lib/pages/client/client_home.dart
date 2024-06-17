@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/user_response/user_model.dart'; // Importa el modelo de Course
 import 'package:mygym_app/providers/courses_provider.dart';
@@ -150,6 +152,14 @@ class ClientHome extends StatelessWidget {
     );
   }
 
+  List<Course> filterCoursesByWeekday(List<Course> courses) {
+    // Obtener el día de la semana actual
+    int todayWeekday = DateTime.now().weekday;
+
+    // Filtrar los cursos que ocurren en el día de la semana actual
+    return courses.where((course) => course.date.weekday == todayWeekday).toList();
+  }
+
   Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider, CourseProvider courseProvider, totalCourses) {
     List<CourseComplete> allCourses = courseProvider.courses;
     return FutureBuilder<List<Course>>(
@@ -157,6 +167,7 @@ class ClientHome extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final courses = snapshot.data!;
+          List<Course> filteredCourses = filterCoursesByWeekday(courses);
           return ListView(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top,
@@ -166,7 +177,7 @@ class ClientHome extends StatelessWidget {
               _buildTitleView('Mis Cursos', 'Ver más'),
               _buildCourseInfoCard(courses, totalCourses),
               _buildTitleView('Cursos de hoy', 'Ver Todos'),
-              _buildCoursesCarousel(courses, context),
+              _buildCoursesCarousel(filteredCourses, context),
               _buildViewAllCoursesButton(context, courses),
               _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
               // Hacer lista de courses en los que no estoy matriculado
@@ -246,21 +257,24 @@ class ClientHome extends StatelessWidget {
   }
 
   Widget CourseBuilder(Course course, BuildContext context, User? initialUser) {
+    final List<Color> colorList = [
+      Colors.red[400]!,
+      Colors.blue[400]!,
+      Colors.green[400]!,
+      Colors.orange[400]!,
+      Colors.purple[400]!,
+      Colors.yellow[400]!,
+      Colors.pink[400]!,
+      Colors.cyan[400]!,
+      Colors.indigo[400]!,
+    ];
+    
     Color cardColor;
-    switch (course.courseName) {
-      case 'Yoga':
-        cardColor = Colors.blue[400]!;
-        break;
-      case 'Pilates':
-        cardColor = Colors.green[400]!;
-        break;
-      case 'Nutrición':
-        cardColor = Colors.orange[400]!;
-        break;
-      default:
-        cardColor = Colors.grey[400]!;
-        break;
-    }
+    // Generar un índice aleatorio
+    final Random random = Random();
+    int randomIndex = random.nextInt(colorList.length);
+    // Asignar un color aleatorio de la lista
+    cardColor = colorList[randomIndex];
 
     return GestureDetector(
       onTap: () {

@@ -111,7 +111,7 @@ class _CourseDetailsState extends State<CourseDetails> {
 
     // cargamos la lista de usuarios actuales
     userProvider.loadPublicUserResponseList();
-    coursesProvider.loadCourseResponseList();
+    coursesProvider.fetchCourses();
 
     return Positioned(
       top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
