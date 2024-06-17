@@ -16,6 +16,7 @@ import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
 import '../client/courses_list_page.dart';
 import '../client/qr_client.dart';
+import 'students_list_page.dart';
 
 class AdminHome extends StatelessWidget {
   const AdminHome({super.key, this.initialUser});
@@ -214,7 +215,8 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCoursesCarousel(List<CourseComplete> courses, BuildContext context) {
+  Widget _buildCoursesCarousel(
+      List<CourseComplete> courses, BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -263,7 +265,8 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget CourseCompleteFilteredBuilder(CourseComplete course, BuildContext context, User? initialUser) {
+  Widget CourseCompleteFilteredBuilder(
+      CourseComplete course, BuildContext context, User? initialUser) {
     final List<Color> colorList = [
       Colors.red[400]!,
       Colors.blue[400]!,
@@ -285,16 +288,12 @@ class AdminHome extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // TODO: Aqui redirige a la tarjeta con estudiantes
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => QRPage(
-        //       courses: course,
-        //       initialUser: initialUser,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentsListPage(course: course)
+          ),
+        );
       },
       child: SizedBox(
         width: 130,
@@ -403,7 +402,7 @@ class AdminHome extends StatelessWidget {
 
   Widget CourseCompleteBuilder(
       CourseComplete course, BuildContext context, User? initialUser) {
-        final List<Color> colorList = [
+    final List<Color> colorList = [
       Colors.red[400]!,
       Colors.blue[400]!,
       Colors.green[400]!,
@@ -414,7 +413,7 @@ class AdminHome extends StatelessWidget {
       Colors.cyan[400]!,
       Colors.indigo[400]!,
     ];
-    
+
     Color cardColor;
     // Generar un índice aleatorio
     final Random random = Random();

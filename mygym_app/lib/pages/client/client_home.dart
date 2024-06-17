@@ -17,11 +17,6 @@ import '../../widgets/title_view.dart';
 import 'courses_list_page.dart';
 import 'qr_client.dart';
 
-// Para trabajar con la misma clase Course perp con diferentes estructuras
-import 'package:mygym_app/models/course_response/course_response.dart' as courseResponse;
-import 'package:mygym_app/models/user_response/course_model.dart' as userCourse;
-
-
 class ClientHome extends StatelessWidget {
   const ClientHome({super.key, this.initialUser});
 

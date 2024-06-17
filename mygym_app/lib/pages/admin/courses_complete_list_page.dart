@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mygym_app/models/course_response/course_response.dart';
-import '../../models/user_response/course_model.dart';
 import '../../utils/getWeekday.dart';
 
 class ListViewCoursesCompletePage extends StatelessWidget {
