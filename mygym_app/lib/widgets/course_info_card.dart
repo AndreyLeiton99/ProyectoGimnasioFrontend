@@ -7,7 +7,7 @@ class CourseInfoCard extends StatelessWidget {
   const CourseInfoCard({super.key, required this.courses, required this.totalCourses});
 
 final List<Course> courses;
-final List<Course> totalCourses;
+final int totalCourses;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ final List<Course> totalCourses;
                   const SizedBox(width: 10),
                   _buildProgressCard(
                     title: 'Disponibles',
-                    number: ((totalCourses.length) - (courses.length)).toString(),
+                    number: ((totalCourses) - (courses.length)).toString(),
                     gradientColors: [Colors.red, Colors.redAccent],
                   ),
                   const SizedBox(width: 10),
