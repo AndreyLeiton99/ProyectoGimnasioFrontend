@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mygym_app/pages/admin/courses_complete_list_page.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:provider/provider.dart';
@@ -151,7 +152,7 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  List<Course> filterCoursesByWeekday(List<Course> courses) {
+  List<CourseComplete> filterCoursesByWeekday(List<CourseComplete> courses) {
     // Obtener el día de la semana actual
     int todayWeekday = DateTime.now().weekday;
 
@@ -164,6 +165,7 @@ class AdminHome extends StatelessWidget {
   Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider,
       CourseProvider courseProvider, totalCourses) {
     List<CourseComplete> allCourses = courseProvider.courses;
+    List<CourseComplete> filteredCourses = filterCoursesByWeekday(allCourses);
     return ListView(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
@@ -178,6 +180,7 @@ class AdminHome extends StatelessWidget {
         //TODO: _buildCourseInfoCard(courses, totalCourses),
 
         _buildTitleView('Cursos de hoy', 'Ver más'),
+        _buildCoursesCarousel(filteredCourses, context),
 
         const Text('Mostrar todos los cursos de hoy'),
 
@@ -188,6 +191,7 @@ class AdminHome extends StatelessWidget {
         _buildCoursesCompleteCarousel(allCourses, context),
 
         const Text('Mostrar botón de "Administrar cursos" para crud'),
+        _buildViewAllCoursesButton(context, allCourses),
 
         //TODO: Modificar el ViewAll para mostrar todos los cursos (va a llevar a pantalla especial para mostrar lista de estudiantes)
         //TODO: _buildViewAllCoursesButton(context, courses),
@@ -210,7 +214,7 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCoursesCarousel(List<Course> courses, BuildContext context) {
+  Widget _buildCoursesCarousel(List<CourseComplete> courses, BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -218,14 +222,14 @@ class AdminHome extends StatelessWidget {
         itemCount: courses.length,
         itemBuilder: (context, index) {
           final course = courses[index];
-          return CourseBuilder(course, context, initialUser);
+          return CourseCompleteFilteredBuilder(course, context, initialUser);
         },
       ),
     );
   }
 
   Widget _buildViewAllCoursesButton(
-      BuildContext context, List<Course> courses) {
+      BuildContext context, List<CourseComplete> courses) {
     return Column(
       children: [
         Center(
@@ -234,7 +238,7 @@ class AdminHome extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ListViewCoursesPage(
+                  builder: (context) => ListViewCoursesCompletePage(
                     courses: courses,
                   ),
                 ),
@@ -243,7 +247,7 @@ class AdminHome extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 23, 190, 154),
             ),
-            child: const Text('Ver todos los cursos',
+            child: const Text('Administrar cursos',
                 style: TextStyle(color: Colors.white)),
           ),
         ),
@@ -259,7 +263,7 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget CourseBuilder(Course course, BuildContext context, User? initialUser) {
+  Widget CourseCompleteFilteredBuilder(CourseComplete course, BuildContext context, User? initialUser) {
     final List<Color> colorList = [
       Colors.red[400]!,
       Colors.blue[400]!,
@@ -281,15 +285,16 @@ class AdminHome extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QRPage(
-              courses: course,
-              initialUser: initialUser,
-            ),
-          ),
-        );
+        // TODO: Aqui redirige a la tarjeta con estudiantes
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => QRPage(
+        //       courses: course,
+        //       initialUser: initialUser,
+        //     ),
+        //   ),
+        // );
       },
       child: SizedBox(
         width: 130,
@@ -330,7 +335,7 @@ class AdminHome extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.courseName,
+                        course.nombreCurso,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: GymAppTheme.fontName,
@@ -398,21 +403,24 @@ class AdminHome extends StatelessWidget {
 
   Widget CourseCompleteBuilder(
       CourseComplete course, BuildContext context, User? initialUser) {
+        final List<Color> colorList = [
+      Colors.red[400]!,
+      Colors.blue[400]!,
+      Colors.green[400]!,
+      Colors.orange[400]!,
+      Colors.purple[400]!,
+      Colors.yellow[400]!,
+      Colors.pink[400]!,
+      Colors.cyan[400]!,
+      Colors.indigo[400]!,
+    ];
+    
     Color cardColor;
-    switch (course.nombreCurso) {
-      case 'Yoga':
-        cardColor = Colors.blue[400]!;
-        break;
-      case 'Pilates':
-        cardColor = Colors.green[400]!;
-        break;
-      case 'Nutrición':
-        cardColor = Colors.orange[400]!;
-        break;
-      default:
-        cardColor = Colors.grey[400]!;
-        break;
-    }
+    // Generar un índice aleatorio
+    final Random random = Random();
+    int randomIndex = random.nextInt(colorList.length);
+    // Asignar un color aleatorio de la lista
+    cardColor = colorList[randomIndex];
 
     return GestureDetector(
       onTap: () {

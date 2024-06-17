@@ -113,6 +113,10 @@ class _CourseDetailsState extends State<CourseDetails> {
     userProvider.loadPublicUserResponseList();
     coursesProvider.fetchCourses();
 
+    // TODO: prueba borrar, FUNCIONA
+
+    //coursesProvider.deleteCourse(14); // devuelve un bool
+
     return Positioned(
       top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
       bottom: 0,
