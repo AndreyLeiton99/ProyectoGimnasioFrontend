@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mygym_app/models/course_response/course_response.dart';
+import 'package:mygym_app/providers/courses_provider.dart';
+import 'package:provider/provider.dart';
 import '../../utils/getWeekday.dart';
 
 class ListViewCoursesCompletePage extends StatelessWidget {
@@ -42,6 +44,7 @@ class CourseCompleteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final courseProvider = context.watch<CourseProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Card(
@@ -74,6 +77,24 @@ class CourseCompleteCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      print('Favorite button pressed!');
+                      courseProvider.deleteCourse(course.id);
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      print('Comment button pressed!');
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
