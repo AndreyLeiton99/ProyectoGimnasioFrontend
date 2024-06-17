@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mygym_app/pages/admin/courses_complete_list_page.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
+import 'package:mygym_app/widgets/students_info_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
@@ -167,6 +168,7 @@ class AdminHome extends StatelessWidget {
       CourseProvider courseProvider, totalCourses) {
     List<CourseComplete> allCourses = courseProvider.courses;
     List<CourseComplete> filteredCourses = filterCoursesByWeekday(allCourses);
+    int totalStudents = userProvider.userResponseList.length;
     return ListView(
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
@@ -176,14 +178,15 @@ class AdminHome extends StatelessWidget {
         _buildTitleView('Datos del gimnasio', 'Ver más'),
         //_buildCourseInfoCard(allCourses, totalCourses),
 
-        const Text('Aquí dashboard con info general del gimnasio'),
+        // const Text('Aquí dashboard con info general del gimnasio'),
         //TODO: Mostrar datos importantes del gimnasio
         //TODO: _buildCourseInfoCard(courses, totalCourses),
+        _buildCourseInfoCard(totalStudents, totalCourses),
 
         _buildTitleView('Cursos de hoy', 'Ver más'),
         _buildCoursesCarousel(filteredCourses, context),
 
-        const Text('Mostrar todos los cursos de hoy'),
+        // const Text('Mostrar todos los cursos de hoy'),
 
         //TODO: Mostrar allCourses con filtro
         //TODO: _buildCoursesCarousel(filteredCourses, context),
@@ -191,7 +194,7 @@ class AdminHome extends StatelessWidget {
         _buildTitleView('Todos los cursos', 'Ver más'),
         _buildCoursesCompleteCarousel(allCourses, context),
 
-        const Text('Mostrar botón de "Administrar cursos" para crud'),
+        // const Text('Mostrar botón de "Administrar cursos" para crud'),
         _buildViewAllCoursesButton(context, allCourses),
 
         //TODO: Modificar el ViewAll para mostrar todos los cursos (va a llevar a pantalla especial para mostrar lista de estudiantes)
@@ -549,9 +552,9 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseInfoCard(List<Course> courses, int totalCourses) {
-    return CourseInfoCard(
-      courses: courses,
+  Widget _buildCourseInfoCard(int totalStudents, int totalCourses) {
+    return StudentInfoCard(
+      totalStudents: totalStudents,
       totalCourses: totalCourses,
     );
   }
