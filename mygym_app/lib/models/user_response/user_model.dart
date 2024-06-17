@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'course_model.dart';
-import 'attendance_model.dart';
+import '../attendance_model.dart';
 
 class User {
   final int id;

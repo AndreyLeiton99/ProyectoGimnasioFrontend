@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/course_model.dart';
-import 'package:mygym_app/models/user_model.dart';
+import 'package:mygym_app/models/user_response/course_model.dart';
+import 'package:mygym_app/models/user_response/user_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
 

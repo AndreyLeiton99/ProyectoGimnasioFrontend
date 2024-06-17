@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:mygym_app/models/user_model.dart';
+import 'package:mygym_app/models/user_response/user_model.dart';
 
-import '../models/course_model.dart'; // Importa el modelo de usuario
+import '../models/user_response/course_model.dart'; // Importa el modelo de usuario
 
 class UserProvider extends ChangeNotifier {
   // URL base para las peticiones a la API
@@ -90,5 +90,12 @@ class UserProvider extends ChangeNotifier {
   User getUserById(int id) {
     // Utiliza el método firstWhere para encontrar el primer usuario con el ID deseado
     return userResponseList.firstWhere((user) => user.id == id);
+  }
+
+  // Devuelve la lista de cursos de un User
+  List<Course> getCoursesByUser(int id) {
+    // Utiliza el método firstWhere para encontrar el primer usuario con el ID deseado
+    User user = userResponseList.firstWhere((user) => user.id == id);
+    return user.courses;
   }
 }

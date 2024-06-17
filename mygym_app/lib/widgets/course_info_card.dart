@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:mygym_app/models/user_response/course_model.dart';
 
 import 'progress_painter.dart';
 
 class CourseInfoCard extends StatelessWidget {
-  const CourseInfoCard({super.key});
+  const CourseInfoCard({super.key, required this.courses, required this.totalCourses});
+
+final List<Course> courses;
+final List<Course> totalCourses;
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +39,20 @@ class CourseInfoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildProgressCard(
-                    title: 'Courses matriculados',
-                    number: '5',
+                    title: 'Matriculados',
+                    number: courses.length.toString(),
                     gradientColors: [Colors.orange, Colors.orangeAccent],
                   ),
                   const SizedBox(width: 10),
                   _buildProgressCard(
-                    title: 'Courses disponibles',
-                    number: '10',
+                    title: 'Disponibles',
+                    number: ((totalCourses.length) - (courses.length)).toString(),
                     gradientColors: [Colors.red, Colors.redAccent],
                   ),
                   const SizedBox(width: 10),
                   _buildProgressCard(
-                    title: 'Courses congelados',
-                    number: '2',
+                    title: 'Congelados',
+                    number: '0',
                     gradientColors: [Colors.purple, Colors.purpleAccent],
                   ),
                 ],

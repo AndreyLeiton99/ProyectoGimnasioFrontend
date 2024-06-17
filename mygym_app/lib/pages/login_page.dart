@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/login_response.dart';
 import 'package:mygym_app/models/token.dart';
-import 'package:mygym_app/models/user_model.dart';
+import 'package:mygym_app/models/user_response/user_model.dart';
 import 'package:mygym_app/pages/admin/admin_home.dart';
 import 'package:mygym_app/pages/client/client_home.dart';
+import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
@@ -34,9 +35,18 @@ class _LoginPageState extends State<LoginPage> {
     final authProvider = context.watch<AuthProvider>();
     final userProvider = context.watch<UserProvider>();
     final isarProvider = context.read<LocalStorageProvider>();
+    final coursesProvider = context.read<CourseProvider>();
+
+    // Lista de providers
+    List<dynamic> providerList = [];
+    providerList.add(authProvider); // 0
+    providerList.add(userProvider); // 1
+    providerList.add(isarProvider); // 2
 
     // cargamos la lista de usuarios actuales
     userProvider.loadPublicUserResponseList();
+    coursesProvider.loadCourseResponseList();
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -112,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                           _isLoading = false;
                           // Aqui implementar funcionalidad para detectar ROL
 
-                          handleLogin(context, authProvider, userProvider, _emailController, _passwordController, isarProvider);
+                          handleLogin(context, providerList, _emailController, _passwordController);
 
                         });
                       });
@@ -128,10 +138,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> handleLogin(context, authProvider, userProvider, email, password, isarProvider) async {
+  Future<void> handleLogin(context, providerList, email, password) async {
     print("Credenciales: ${email.text}    &    ${password.text}");
     // se pasan las credenciales al metodo en el provider para su verificacion
-    final resultado = await authProvider.loginUser(email.text, password.text);
+    final resultado = await providerList[0].loginUser(email.text, password.text);
 
     if (resultado != null) {
       // Login successful!
@@ -141,9 +151,9 @@ class _LoginPageState extends State<LoginPage> {
 
       // Se guarda el Token en la DB de Isar
       Token token = Token(jwtToken: user.jwt, username: user.user.username);
-      isarProvider.save(token);
+      providerList[2].save(token);
 
-      verificarRol(context, authProvider, userProvider, user);
+      verificarRol(context, providerList, user);
 
       // Update provider state and navigate or display success message
     } else {
@@ -163,13 +173,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Future<void> verificarRol(context, authProvider, userProvider, VerifiedUser user) async {
-    String role = await authProvider.getRole(user.jwt);
+  Future<void> verificarRol(context, providerList, VerifiedUser user) async {
+    String role = await providerList[0].getRole(user.jwt);
 
     print('role: $role');
 
     // Aqui cargamos ya el User utilizando el ID del Usuario del response de login
-    User userById = userProvider.getUserById(user.user.id); 
+    User userById = providerList[1].getUserById(user.user.id); 
 
     if(role == 'Public') {
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const ClientHome())));

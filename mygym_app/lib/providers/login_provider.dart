@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:mygym_app/models/login_response.dart';
-import 'package:mygym_app/models/user_model.dart';
+import 'package:mygym_app/models/user_response/user_model.dart';
 
 // TODO: Revisar en cada provider si se incluyen en en main.dart en MultiProvider
 class AuthProvider extends ChangeNotifier {

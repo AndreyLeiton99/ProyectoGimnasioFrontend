@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/course_model.dart';
+import '../../models/user_response/course_model.dart';
 
 class ListViewCoursesPage extends StatelessWidget {
   final List<Course> courses;

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/user_model.dart'; // Importa el modelo de Course
+import 'package:mygym_app/models/user_response/user_model.dart'; // Importa el modelo de Course
+import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
-import '../../models/course_model.dart';
+import '../../models/user_response/course_model.dart';
 import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
 import 'courses_list_page.dart';
@@ -21,9 +22,20 @@ class ClientHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     final authProvider = context.watch<AuthProvider>();
+    final courseProvider = context.watch<CourseProvider>();
     final localStorageProvider = context.read<LocalStorageProvider>();
 
+    // Lista de providers
+    List<dynamic> providerList = [];
+    providerList.add(authProvider); // 0
+    providerList.add(userProvider); // 1
+    providerList.add(courseProvider); // 2
+
+    // se cargan las listas de modelos
     userProvider.loadPublicUserResponseList();
+    courseProvider.loadCourseResponseList();
+
+    List<Course> totalCourses = courseProvider.getCourseList();
 
     return Container(
       color: GymAppTheme.background,
@@ -36,7 +48,7 @@ class ClientHome extends StatelessWidget {
                 _buildAppBar(
                     context, initialUser, authProvider, localStorageProvider),
                 Expanded(
-                  child: _buildMainListViewUI(context, userProvider),
+                  child: _buildMainListViewUI(context, userProvider, totalCourses),
                 ),
               ],
             ),
@@ -131,7 +143,7 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider) {
+  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider, List<Course> totalCourses) {
     return FutureBuilder<List<Course>>(
       future: userProvider.getCoursesForUser(initialUser!.id),
       builder: (context, snapshot) {
@@ -143,8 +155,8 @@ class ClientHome extends StatelessWidget {
               bottom: 10 + MediaQuery.of(context).padding.bottom,
             ),
             children: [
-              _buildTitleView('Mi progreso', 'Ver más'),
-              _buildCourseInfoCard(),
+              _buildTitleView('Mis Cursos', 'Ver más'),
+              _buildCourseInfoCard(courses, totalCourses),
               _buildTitleView('Cursos de hoy', 'Ver Todos'),
               _buildCoursesCarousel(courses, context),
               _buildViewAllCoursesButton(context, courses),
@@ -195,7 +207,7 @@ class ClientHome extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 23, 190, 154),
             ),
-            child: const Text('Ver todos los courses',
+            child: const Text('Ver todos los cursos',
                 style: TextStyle(color: Colors.white)),
           ),
         ),
@@ -364,8 +376,8 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseInfoCard() {
-    return const CourseInfoCard();
+  Widget _buildCourseInfoCard(List<Course> courses, List<Course> totalCourses) {
+    return CourseInfoCard(courses: courses, totalCourses: totalCourses,);
   }
 
   String getDayName(int weekday) {

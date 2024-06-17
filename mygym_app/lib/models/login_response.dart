@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'user_model.dart';
+import 'user_response/user_model.dart';
 
 class VerifiedUser {
     final String jwt;

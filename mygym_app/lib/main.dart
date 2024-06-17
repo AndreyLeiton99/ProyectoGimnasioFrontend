@@ -4,6 +4,7 @@ import 'package:mygym_app/pages/admin/admin_home.dart';
 import 'package:mygym_app/pages/client/client_home.dart';
 import 'package:mygym_app/pages/home_page.dart';
 import 'package:mygym_app/pages/login_page.dart';
+import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
 import 'package:mygym_app/providers/user_provider.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => LocalStorageProvider()),
+        ChangeNotifierProvider(create: (_) => CourseProvider()),
       
       ],
       child: MaterialApp(
