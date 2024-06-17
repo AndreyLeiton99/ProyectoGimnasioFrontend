@@ -38,7 +38,8 @@ class LocalStorageProvider extends ChangeNotifier {
 
   Future<void> deleteToken() async {
     LocalDatabase localDatabase = LocalDatabase();
-    await localDatabase.deleteFirstToken();
+    // await localDatabase.deleteFirstToken();
+    await localDatabase.deleteAllTokens();
     notifyListeners();
   }
 }

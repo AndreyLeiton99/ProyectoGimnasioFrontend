@@ -63,23 +63,14 @@ class LocalDatabase {
     }
   }
 
-  // Future<void> deleteToken(String jwtToken) async {
-  //   final isar = await db;
-  //   final filter = isar.tokens.filter().jwtTokenEqualTo(jwtToken);
-  //   final tokensToDelete = await filter.findAll();
-
-  //   for (final token in tokensToDelete) {
-  //     await isar.writeTxn(() => isar.tokens.delete(token.id!));
-  //   }
-  // }
-
-  // Future<void> deleteFirstToken() async {
-  //   final isar = await db;
-  //   final query = isar.tokens.where();
-  //   final firstToken = await query.findFirst();
-  //   if (firstToken != null) {
-  //     await deleteToken(firstToken.jwtToken);
-  //   }
-  // }
+  // Added method to delete all tokens
+  Future<void> deleteAllTokens() async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+        await isar.tokens.clear();
+        // OR
+        await isar.tokens.where().deleteAll();
+      });
+    }
 
 }

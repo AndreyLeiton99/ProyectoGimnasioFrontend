@@ -43,6 +43,8 @@ class ClientHome extends StatelessWidget {
     userProvider.loadPublicUserResponseList();
     //courseProvider.loadCourseResponseList();
 
+    //courseProvider.fetchCourses();
+
     //List<Course> totalCourses = courseProvider.getCourseList();
     int totalCourses = courseProvider.courses.length;
 
