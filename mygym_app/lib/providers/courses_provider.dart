@@ -27,21 +27,57 @@ class CourseProvider extends ChangeNotifier {
   }
 
   Future<void> createCourse(Course course) async {
-  final String baseUrl = dotenv.env['BASE_URL']!;
-  final url = Uri.parse('$baseUrl/api/cursos');
+    final String baseUrl = dotenv.env['BASE_URL']!;
+    final url = Uri.parse('$baseUrl/api/cursos');
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(course.toJson()),
+    );
 
-  final response = await http.post(
-    url,
-    headers: {"Content-Type": "application/json"},
-    body: jsonEncode(course.toJson()),
-  );
-
-  if (response.statusCode == 200) {
-    // Handle successful creation here
-    print('Curso creado exitosamente!');
-  } else {
-    throw Exception('Fallo en el proceso. Status code: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      // Handle successful creation here
+      print('Curso creado exitosamente!');
+    } else {
+      throw Exception('Fallo en el proceso. Status code: ${response.statusCode}');
+    }
   }
-}
+
+  Future<void> updateCourse(Course course) async {
+    final String baseUrl = dotenv.env['BASE_URL']!;
+    final url = Uri.parse('$baseUrl/api/cursos/${course.id}');
+
+    final response = await http.put(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(course.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle successful update here
+      print('Curso actualizado exitosamente!');
+    } else {
+      throw Exception('Fallo en la actualización. Status code: ${response.statusCode}');
+    }
+  }
+
+
+  Future<bool> deleteCourse(int id) async {
+    final String baseUrl = dotenv.env['BASE_URL']!;
+    final url = Uri.parse('$baseUrl/api/cursos/$id');
+
+    final response = await http.delete(
+      url
+    );
+
+    if (response.statusCode == 200) {
+      // Handle successful creation here
+      print('Curso eliminado exitosamente!');
+      return true;
+    } else {
+      print('Fallo en el proceso. Status code: ${response.statusCode}');
+      return false;
+    }
+  }
 
 }
