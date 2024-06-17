@@ -9,15 +9,11 @@ import 'package:provider/provider.dart';
 import '../../app_theme.dart';
 import '../../models/user_response/course_model.dart';
 import '../../models/course_response/course_response.dart';
+import '../../utils/getWeekday.dart';
 import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
 import 'courses_list_page.dart';
 import 'qr_client.dart';
-
-// Para trabajar con la misma clase Course perp con diferentes estructuras
-import 'package:mygym_app/models/course_response/course_response.dart' as courseResponse;
-import 'package:mygym_app/models/user_response/course_model.dart' as userCourse;
-
 
 class ClientHome extends StatelessWidget {
   const ClientHome({super.key, this.initialUser});
@@ -55,7 +51,8 @@ class ClientHome extends StatelessWidget {
                 _buildAppBar(
                     context, initialUser, authProvider, localStorageProvider),
                 Expanded(
-                  child: _buildMainListViewUI(context, userProvider, courseProvider, totalCourses),
+                  child: _buildMainListViewUI(
+                      context, userProvider, courseProvider, totalCourses),
                 ),
               ],
             ),
@@ -150,7 +147,8 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider, CourseProvider courseProvider, totalCourses) {
+  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider,
+      CourseProvider courseProvider, totalCourses) {
     List<CourseComplete> allCourses = courseProvider.courses;
     return FutureBuilder<List<Course>>(
       future: userProvider.getCoursesForUser(initialUser!.id),
@@ -183,7 +181,8 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCoursesCompleteCarousel(List<CourseComplete> courses, BuildContext context) {
+  Widget _buildCoursesCompleteCarousel(
+      List<CourseComplete> courses, BuildContext context) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -211,7 +210,8 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildViewAllCoursesButton(BuildContext context, List<Course> courses) {
+  Widget _buildViewAllCoursesButton(
+      BuildContext context, List<Course> courses) {
     return Column(
       children: [
         Center(
@@ -246,6 +246,8 @@ class ClientHome extends StatelessWidget {
   }
 
   Widget CourseBuilder(Course course, BuildContext context, User? initialUser) {
+    Weekday util = Weekday();
+
     Color cardColor;
     switch (course.courseName) {
       case 'Yoga':
@@ -331,7 +333,7 @@ class ClientHome extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Día: ${getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
+                                'Día: ${util.getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
                                 style: const TextStyle(
                                   fontFamily: GymAppTheme.fontName,
                                   fontWeight: FontWeight.w500,
@@ -379,7 +381,10 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget CourseCompleteBuilder(CourseComplete course, BuildContext context, User? initialUser) {
+  Widget CourseCompleteBuilder(
+      CourseComplete course, BuildContext context, User? initialUser) {
+    Weekday util = Weekday();
+
     Color cardColor;
     switch (course.nombreCurso) {
       case 'Yoga':
@@ -457,7 +462,7 @@ class ClientHome extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Día: ${getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
+                                'Día: ${util.getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
                                 style: const TextStyle(
                                   fontFamily: GymAppTheme.fontName,
                                   fontWeight: FontWeight.w500,
@@ -525,27 +530,9 @@ class ClientHome extends StatelessWidget {
   }
 
   Widget _buildCourseInfoCard(List<Course> courses, int totalCourses) {
-    return CourseInfoCard(courses: courses, totalCourses: totalCourses,);
-  }
-
-  String getDayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Lunes';
-      case 2:
-        return 'Martes';
-      case 3:
-        return 'Miércoles';
-      case 4:
-        return 'Jueves';
-      case 5:
-        return 'Viernes';
-      case 6:
-        return 'Sábado';
-      case 7:
-        return 'Domingo';
-      default:
-        return 'Día desconocido';
-    }
+    return CourseInfoCard(
+      courses: courses,
+      totalCourses: totalCourses,
+    );
   }
 }

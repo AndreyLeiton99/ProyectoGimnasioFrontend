@@ -23,14 +23,14 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final double infoHeight = 364.0;
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
+  final double infoHeight = 364.0;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +111,7 @@ class _CourseDetailsState extends State<CourseDetails> {
 
     // cargamos la lista de usuarios actuales
     userProvider.loadPublicUserResponseList();
-    coursesProvider.loadCourseResponseList();
+    coursesProvider.fetchCourses();
 
     return Positioned(
       top: (MediaQuery.of(context).size.width / 1.2) - 24.0,
@@ -185,7 +185,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                             },
                           ),
                           const SizedBox(height: 40),
-                      
+
                           // Campo de texto para contraseña
                           TextFormField(
                             controller: passwordController,
