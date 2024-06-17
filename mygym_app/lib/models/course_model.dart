@@ -27,7 +27,7 @@ class Course {
 
   factory Course.fromJson(Map<String, dynamic> json) => Course(
         id: json["id"],
-        courseName: json["nombreCourse"],
+        courseName: json["nombreCurso"],
         description: json["description"],
         date: DateTime.parse(json["date"]),
         capacity: json["capacity"],

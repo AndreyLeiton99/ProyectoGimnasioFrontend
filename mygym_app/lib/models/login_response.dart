@@ -4,7 +4,7 @@ import 'user_model.dart';
 
 class VerifiedUser {
     final String jwt;
-    final User user;
+    final Usuario user;
 
     VerifiedUser({
         required this.jwt,
@@ -17,7 +17,7 @@ class VerifiedUser {
 
     factory VerifiedUser.fromJson(Map<String, dynamic> json) => VerifiedUser(
         jwt: json["jwt"],
-        user: User.fromJson(json["user"]),
+        user: Usuario.fromJson(json["user"]),
     );
 
     Map<String, dynamic> toJson() => {

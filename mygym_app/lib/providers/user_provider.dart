@@ -16,6 +16,8 @@ class UserProvider extends ChangeNotifier {
   // Carga la lista de usuarios del endpoint de Strapi
   Future<void> loadPublicUserResponseList() async {
     // Verifica si la lista se encuentra cargada para evitar peticiones innecesarias
+    // TODO: Pensar si esta verificacion del inicio podria causar problemas de que no actualice la lista luego de agregar un nuevo User en ejecucion
+    // !Lo de arriba se soluciona con un metodo para actualizar la lista, no va a interferir
     if (userResponseList.isEmpty) {
       // Construye la URL para la petición GET a la API
       // el '?populate=*' permite obtener una respuesta con las relaciones incluidas
@@ -62,7 +64,7 @@ class UserProvider extends ChangeNotifier {
         final responseData = json.decode(response.body) as Map<String, dynamic>;
 
         // Extrae la lista de Courses de los datos de esa respuesta.
-        final coursesList = responseData['Courses'] as List<dynamic>;
+        final coursesList = responseData['cursos'] as List<dynamic>;
 
         // Convierte cada objeto JSON de Course en un objeto Course.
         final convertedCourses =

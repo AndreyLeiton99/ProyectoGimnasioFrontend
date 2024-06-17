@@ -145,10 +145,10 @@ class ClientHome extends StatelessWidget {
             children: [
               _buildTitleView('Mi progreso', 'Ver más'),
               _buildCourseInfoCard(),
-              _buildTitleView('courses de hoy', 'Ver Todos'),
+              _buildTitleView('Cursos de hoy', 'Ver Todos'),
               _buildCoursesCarousel(courses, context),
               _buildViewAllCoursesButton(context, courses),
-              _buildTitleView('courses disponibles para matrícula', 'Ver Todos'),
+              _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
               // Hacer lista de courses en los que no estoy matriculado
               _buildCoursesCarousel(courses, context),
               _buildViewAllCoursesButton(context, courses),

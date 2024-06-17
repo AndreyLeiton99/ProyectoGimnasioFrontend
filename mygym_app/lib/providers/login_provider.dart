@@ -14,7 +14,8 @@ class AuthProvider extends ChangeNotifier {
   String? accessToken;
 
   // Guarda el usuario actual de la session
-  User? currentUser;
+  //User? currentUser;
+  Usuario? currentUser;
 
   // Método para iniciar sesión con las credenciales enviadas
   Future<VerifiedUser?> loginUser(String email, String password) async {
@@ -34,6 +35,7 @@ class AuthProvider extends ChangeNotifier {
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
       // Convierte la respuesta a un objeto VerifiedUser
+      print("Response: $responseData");
       final userLoginResponse = VerifiedUser.fromJson(responseData);
 
       // Almacena el JWT token y el usuario actual

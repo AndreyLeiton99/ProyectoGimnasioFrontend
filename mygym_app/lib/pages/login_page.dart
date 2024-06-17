@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mygym_app/models/login_response.dart';
 import 'package:mygym_app/models/token.dart';
+import 'package:mygym_app/models/user_model.dart';
 import 'package:mygym_app/pages/admin/admin_home.dart';
 import 'package:mygym_app/pages/client/client_home.dart';
 import 'package:mygym_app/providers/local_storage_provider.dart';
 import 'package:mygym_app/providers/login_provider.dart';
+import 'package:mygym_app/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,8 +31,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<AuthProvider>();
+    final authProvider = context.watch<AuthProvider>();
+    final userProvider = context.watch<UserProvider>();
     final isarProvider = context.read<LocalStorageProvider>();
+
+    // cargamos la lista de usuarios actuales
+    userProvider.loadPublicUserResponseList();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Iniciar sesión'),
@@ -105,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                           _isLoading = false;
                           // Aqui implementar funcionalidad para detectar ROL
 
-                          handleLogin(context, userProvider, _emailController, _passwordController, isarProvider);
+                          handleLogin(context, authProvider, userProvider, _emailController, _passwordController, isarProvider);
 
                         });
                       });
@@ -121,10 +128,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> handleLogin(context, userProvider, email, password, isarProvider) async {
+  Future<void> handleLogin(context, authProvider, userProvider, email, password, isarProvider) async {
     print("Credenciales: ${email.text}    &    ${password.text}");
     // se pasan las credenciales al metodo en el provider para su verificacion
-    final resultado = await userProvider.loginUser(email.text, password.text);
+    final resultado = await authProvider.loginUser(email.text, password.text);
 
     if (resultado != null) {
       // Login successful!
@@ -136,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
       Token token = Token(jwtToken: user.jwt, username: user.user.username);
       isarProvider.save(token);
 
-      verificarRol(context, userProvider, user);
+      verificarRol(context, authProvider, userProvider, user);
 
       // Update provider state and navigate or display success message
     } else {
@@ -156,14 +163,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  Future<void> verificarRol(context, userProvider, VerifiedUser user) async {
-    String role = await userProvider.getRole(user.jwt);
+  Future<void> verificarRol(context, authProvider, userProvider, VerifiedUser user) async {
+    String role = await authProvider.getRole(user.jwt);
 
     print('role: $role');
 
+    // Aqui cargamos ya el User utilizando el ID del Usuario del response de login
+    User userById = userProvider.getUserById(user.user.id); 
+
     if(role == 'Public') {
       // Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const ClientHome())));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => ClientHome(initialUser: user.user,))));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => ClientHome(initialUser: userById,))));
     }else if(role == 'Authenticated'){
       // TODO: Agregar el parametro de usuario a AdminHome()
       Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => const AdminHome())));

@@ -41,9 +41,9 @@ class User {
         blocked: json["blocked"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
-        courses: List<Course>.from(json["Courses"].map((x) => Course.fromJson(x))),
+        courses: List<Course>.from(json["cursos"].map((x) => Course.fromJson(x))),
         attendance: List<Attendance>.from(
-            json["Attendances"].map((x) => Attendance.fromJson(x))),
+            json["asistencias"].map((x) => Attendance.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,7 +55,7 @@ class User {
         "blocked": blocked,
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
-        "Courses": List<dynamic>.from(courses.map((x) => x.toJson())),
-        "Attendances": List<dynamic>.from(attendance.map((x) => x.toJson())),
+        "cursos": List<dynamic>.from(courses.map((x) => x.toJson())),
+        "asistencias": List<dynamic>.from(attendance.map((x) => x.toJson())),
       };
 }
