@@ -45,5 +45,7 @@ class Course {
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
         "publishedAt": publishedAt.toIso8601String(),
+        //TODO: Esta es la solucion para la hora de mostrar cursos
+        "professor": [],
       };
 }
