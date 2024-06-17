@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import '../../models/user_response/course_model.dart';
+import '../../utils/getWeekday.dart';
 
 class ListViewCoursesPage extends StatelessWidget {
   final List<Course> courses;
 
-  const ListViewCoursesPage({required this.courses});
+  const ListViewCoursesPage({super.key, required this.courses});
 
   @override
   Widget build(BuildContext context) {
+    final Weekday util = Weekday();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todos los courses'),
+        title: const Text('Todos los Cursos'),
       ),
       body: ListView.builder(
         itemCount: courses.length,
         itemBuilder: (context, index) {
-          return CourseCard(
-            course: courses[index],
-          );
+          final course = courses[index];
+
+          final String day = util.getDayName(
+              course.date.weekday); // Assuming getDayName function exists
+          final String hour =
+              DateFormat('h:mm a').format(course.date.toLocal());
+
+          return CourseCard(course: course, day: day, hour: hour);
         },
       ),
     );
@@ -27,128 +34,49 @@ class ListViewCoursesPage extends StatelessWidget {
 
 class CourseCard extends StatelessWidget {
   final Course course;
+  final String day;
+  final String hour;
 
-  const CourseCard({required this.course});
+  const CourseCard(
+      {super.key, required this.course, required this.day, required this.hour});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              offset: const Offset(1.1, 1.1),
-              blurRadius: 10.0,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildTitle(course.courseName),
-            const SizedBox(height: 16),
-            _buildInfoRow(
-              leftText: course.description,
-              rightText: 'Instructor: ',
-            ),
-            const SizedBox(height: 16),
-            _buildDivider(),
-            const SizedBox(height: 16),
-            _buildMeasurementRow('Detalles del Course', ''),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow({required String leftText, required String rightText}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Icon(
-                Icons.info,
-                color: Colors.grey.withOpacity(0.5),
-                size: 16,
-              ),
-              const SizedBox(width: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                leftText,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: Colors.grey.withOpacity(0.5),
-                ),
+                course.courseName,
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('Día: $day'),
+                  const SizedBox(
+                    width: 100,
+                  ),
+                  Text('Hora: $hour'),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Text(
+                course.description,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 15),
             ],
           ),
-          Text(
-            rightText,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-              color: Colors.blue,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Container(
-        height: 2,
-        color: Colors.grey.withOpacity(0.2),
-      ),
-    );
-  }
-
-  Widget _buildMeasurementRow(String measurement, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            measurement,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: Colors.black87,
-            ),
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-              color: Colors.grey.withOpacity(0.5),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
