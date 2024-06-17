@@ -85,6 +85,7 @@ class CourseCompleteCard extends StatelessWidget {
                     onPressed: () {
                       print('Favorite button pressed!');
                       courseProvider.deleteCourse(course.id);
+                      Navigator.pop(context);
                     },
                   ),
                   IconButton(
