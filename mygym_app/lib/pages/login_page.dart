@@ -45,8 +45,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // cargamos la lista de usuarios actuales
     userProvider.loadPublicUserResponseList();
-    coursesProvider.loadCourseResponseList();
-    
+    coursesProvider.fetchCourses();
 
     return Scaffold(
       appBar: AppBar(

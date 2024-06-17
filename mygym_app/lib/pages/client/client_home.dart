@@ -8,10 +8,16 @@ import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 import '../../models/user_response/course_model.dart';
+import '../../models/course_response/course_response.dart';
 import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
 import 'courses_list_page.dart';
 import 'qr_client.dart';
+
+// Para trabajar con la misma clase Course perp con diferentes estructuras
+import 'package:mygym_app/models/course_response/course_response.dart' as courseResponse;
+import 'package:mygym_app/models/user_response/course_model.dart' as userCourse;
+
 
 class ClientHome extends StatelessWidget {
   const ClientHome({super.key, this.initialUser});
@@ -33,9 +39,10 @@ class ClientHome extends StatelessWidget {
 
     // se cargan las listas de modelos
     userProvider.loadPublicUserResponseList();
-    courseProvider.loadCourseResponseList();
+    //courseProvider.loadCourseResponseList();
 
-    List<Course> totalCourses = courseProvider.getCourseList();
+    //List<Course> totalCourses = courseProvider.getCourseList();
+    int totalCourses = courseProvider.courses.length;
 
     return Container(
       color: GymAppTheme.background,
@@ -48,7 +55,7 @@ class ClientHome extends StatelessWidget {
                 _buildAppBar(
                     context, initialUser, authProvider, localStorageProvider),
                 Expanded(
-                  child: _buildMainListViewUI(context, userProvider, totalCourses),
+                  child: _buildMainListViewUI(context, userProvider, courseProvider, totalCourses),
                 ),
               ],
             ),
@@ -143,7 +150,8 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider, List<Course> totalCourses) {
+  Widget _buildMainListViewUI(BuildContext context, UserProvider userProvider, CourseProvider courseProvider, totalCourses) {
+    List<CourseComplete> allCourses = courseProvider.courses;
     return FutureBuilder<List<Course>>(
       future: userProvider.getCoursesForUser(initialUser!.id),
       builder: (context, snapshot) {
@@ -162,7 +170,7 @@ class ClientHome extends StatelessWidget {
               _buildViewAllCoursesButton(context, courses),
               _buildTitleView('Cursos disponibles para matrícula', 'Ver Todos'),
               // Hacer lista de courses en los que no estoy matriculado
-              _buildCoursesCarousel(courses, context),
+              _buildCoursesCompleteCarousel(allCourses, context),
               _buildViewAllCoursesButton(context, courses),
             ],
           );
@@ -172,6 +180,20 @@ class ClientHome extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+
+  Widget _buildCoursesCompleteCarousel(List<CourseComplete> courses, BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: courses.length,
+        itemBuilder: (context, index) {
+          final course = courses[index];
+          return CourseCompleteBuilder(course, context, initialUser);
+        },
+      ),
     );
   }
 
@@ -232,7 +254,7 @@ class ClientHome extends StatelessWidget {
       case 'Pilates':
         cardColor = Colors.green[400]!;
         break;
-      case 'Course C':
+      case 'Nutrición':
         cardColor = Colors.orange[400]!;
         break;
       default:
@@ -357,6 +379,132 @@ class ClientHome extends StatelessWidget {
     );
   }
 
+  Widget CourseCompleteBuilder(CourseComplete course, BuildContext context, User? initialUser) {
+    Color cardColor;
+    switch (course.nombreCurso) {
+      case 'Yoga':
+        cardColor = Colors.blue[400]!;
+        break;
+      case 'Pilates':
+        cardColor = Colors.green[400]!;
+        break;
+      case 'Nutrición':
+        cardColor = Colors.orange[400]!;
+        break;
+      default:
+        cardColor = Colors.grey[400]!;
+        break;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        // Con los cursos sin matricular, no hay accion de nada
+      },
+      child: SizedBox(
+        width: 130,
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 32, left: 8, right: 8, bottom: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: cardColor.withOpacity(0.6),
+                      offset: const Offset(1.1, 4.0),
+                      blurRadius: 8.0,
+                    ),
+                  ],
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      cardColor,
+                      cardColor.withOpacity(0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(8.0),
+                    bottomLeft: Radius.circular(8.0),
+                    topLeft: Radius.circular(8.0),
+                    topRight: Radius.circular(54.0),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 54, left: 16, right: 16, bottom: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        course.nombreCurso,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: GymAppTheme.fontName,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          letterSpacing: 0.2,
+                          color: GymAppTheme.white,
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Día: ${getDayName(course.date.weekday)} \nCapacidad: ${course.capacity} \nInstructor: ', // Ejemplo de información adicional
+                                style: const TextStyle(
+                                  fontFamily: GymAppTheme.fontName,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10,
+                                  letterSpacing: 0.2,
+                                  color: GymAppTheme.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                width: 84,
+                height: 84,
+                decoration: BoxDecoration(
+                  color: GymAppTheme.nearlyWhite.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            const Positioned(
+              top: 0,
+              left: 8,
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: Icon(
+                  Icons.fitness_center,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
       items: const [
@@ -376,7 +524,7 @@ class ClientHome extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseInfoCard(List<Course> courses, List<Course> totalCourses) {
+  Widget _buildCourseInfoCard(List<Course> courses, int totalCourses) {
     return CourseInfoCard(courses: courses, totalCourses: totalCourses,);
   }
 
