@@ -288,7 +288,6 @@ class ClientHome extends StatelessWidget {
       Colors.green[400]!,
       Colors.orange[400]!,
       Colors.purple[400]!,
-      Colors.yellow[400]!,
       Colors.pink[400]!,
       Colors.cyan[400]!,
       Colors.indigo[400]!,

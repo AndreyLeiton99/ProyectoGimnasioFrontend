@@ -18,9 +18,8 @@ class _StudentsListPageState extends State<StudentsListPage> {
   @override
   void initState() {
     super.initState();
-    // Aquí puedes inicializar la lista de estudiantes, por ejemplo, desde el widget.course
-    // students = widget.course.students; // Asume que el curso tiene una lista de estudiantes
-    // A modo de ejemplo, se genera una lista ficticia de estudiantes
+
+    //TODO: Cargar lista de estudiantes
     students = List.generate(
       10,
       (index) => Student(
