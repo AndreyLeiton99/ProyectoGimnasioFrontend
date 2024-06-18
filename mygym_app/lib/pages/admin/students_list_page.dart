@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../models/course_response/course_response.dart';
-import '../../models/user_response/course_model.dart';
 import '../../models/user_response/user_model.dart';
 
 class StudentsListPage extends StatefulWidget {

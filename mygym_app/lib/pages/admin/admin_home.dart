@@ -9,14 +9,10 @@ import 'package:provider/provider.dart';
 
 import '../../app_theme.dart';
 import '../../models/course_response/course_response.dart';
-import '../../models/user_response/course_model.dart';
 import '../../models/user_response/user_model.dart';
 import '../../providers/courses_provider.dart';
 import '../../providers/user_provider.dart';
-import '../../widgets/course_info_card.dart';
 import '../../widgets/title_view.dart';
-import '../client/courses_list_page.dart';
-import '../client/qr_client.dart';
 import 'students_list_page.dart';
 
 class AdminHome extends StatelessWidget {

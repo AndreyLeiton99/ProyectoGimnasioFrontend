@@ -149,7 +149,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(top: 32.0, left: 18, right: 16),
+                    padding: EdgeInsets.only(top: 20.0, left: 18, right: 16),
                     child: Text(
                       'Inicio de Sesión\nMy Gym App',
                       textAlign: TextAlign.left,
@@ -161,7 +161,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 80),
+                  const SizedBox(height: 30),
                   Padding(
                     padding: const EdgeInsets.only(
                         left: 16, right: 16, bottom: 8, top: 16),
@@ -188,7 +188,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 20),
 
                           // Campo de texto para contraseña
                           TextFormField(
@@ -217,7 +217,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           const SizedBox(
-                            height: 75,
+                            height: 35,
                           ),
                           ElevatedButton(
                             onPressed: _isLoading
@@ -257,7 +257,7 @@ class _CourseDetailsState extends State<CourseDetails> {
                                     style: TextStyle(color: Colors.white)),
                           ),
                           const SizedBox(
-                            height: 30,
+                            height: 10,
                           ),
                         ],
                       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mygym_app/models/course_response/course_response.dart';
-import 'package:mygym_app/models/user_response/course_model.dart';
 import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:provider/provider.dart';
 import '../../utils/getWeekday.dart';

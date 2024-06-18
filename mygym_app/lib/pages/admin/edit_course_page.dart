@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mygym_app/models/course_response/course_response.dart';
-import 'package:mygym_app/providers/courses_provider.dart';
-import 'package:provider/provider.dart';
 
 class EditCoursePage extends StatefulWidget {
   final CourseComplete course;

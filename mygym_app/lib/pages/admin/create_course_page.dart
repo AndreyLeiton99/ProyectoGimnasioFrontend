@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/course_response/course_response.dart';
 import 'package:mygym_app/providers/courses_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -32,17 +31,21 @@ class _CreateCoursePageState extends State<CreateCoursePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Curso'),
-      ),
-      body: Stack(
-        children: <Widget>[
-          const CourseHeaderImage(),
-          CourseForm(
-              infoHeight: 364.0,
-              tempHeight: MediaQuery.of(context).size.height),
-        ],
+    return Container(
+      color: const Color.fromARGB(255, 27, 27, 27),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: const Text('Crear Curso'),
+        ),
+        body: Stack(
+          children: <Widget>[
+            const CourseHeaderImage(),
+            CourseForm(
+                infoHeight: 364.0,
+                tempHeight: MediaQuery.of(context).size.height),
+          ],
+        ),
       ),
     );
   }
@@ -127,7 +130,7 @@ class _CourseFormState extends State<CourseForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(top: 32.0, left: 18, right: 16),
+                    padding: EdgeInsets.only(top: 5.0, left: 18, right: 16),
                     child: Text(
                       'Crear Nuevo Curso',
                       textAlign: TextAlign.left,

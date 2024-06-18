@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mygym_app/models/user_response/course_model.dart';
 
 import 'progress_painter.dart';
 
