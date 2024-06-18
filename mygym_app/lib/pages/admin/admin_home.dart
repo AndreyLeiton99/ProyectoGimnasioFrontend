@@ -184,7 +184,7 @@ class AdminHome extends StatelessWidget {
         _buildCourseInfoCard(totalStudents, totalCourses),
 
         _buildTitleView('Cursos de hoy', 'Ver más'),
-        _buildCoursesCarousel(filteredCourses, context),
+        _buildCoursesCarousel(filteredCourses, context, userProvider),
 
         // const Text('Mostrar todos los cursos de hoy'),
 
@@ -219,7 +219,7 @@ class AdminHome extends StatelessWidget {
   }
 
   Widget _buildCoursesCarousel(
-      List<CourseComplete> courses, BuildContext context) {
+      List<CourseComplete> courses, BuildContext context, UserProvider userProvider) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -227,7 +227,7 @@ class AdminHome extends StatelessWidget {
         itemCount: courses.length,
         itemBuilder: (context, index) {
           final course = courses[index];
-          return CourseCompleteFilteredBuilder(course, context, initialUser);
+          return CourseCompleteFilteredBuilder(course, context, initialUser, userProvider);
         },
       ),
     );
@@ -269,7 +269,7 @@ class AdminHome extends StatelessWidget {
   }
 
   Widget CourseCompleteFilteredBuilder(
-      CourseComplete course, BuildContext context, User? initialUser) {
+      CourseComplete course, BuildContext context, User? initialUser, UserProvider userProvider) {
     final List<Color> colorList = [
       Colors.red[400]!,
       Colors.blue[400]!,
@@ -288,12 +288,14 @@ class AdminHome extends StatelessWidget {
     // Asignar un color aleatorio de la lista
     cardColor = colorList[randomIndex];
 
+    List<User> usersList = userProvider.userResponseList; 
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StudentsListPage(course: course)
+            builder: (context) => StudentsListPage(course: course, students: usersList)
           ),
         );
       },

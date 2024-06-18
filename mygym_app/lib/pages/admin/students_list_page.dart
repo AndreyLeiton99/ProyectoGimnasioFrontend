@@ -1,34 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../models/course_response/course_response.dart';
 import '../../models/user_response/course_model.dart';
+import '../../models/user_response/user_model.dart';
 
 class StudentsListPage extends StatefulWidget {
   final CourseComplete course;
+  final List<User> students;
 
-  StudentsListPage({required this.course});
+  StudentsListPage({required this.course, required this.students});
 
   @override
   _StudentsListPageState createState() => _StudentsListPageState();
 }
 
 class _StudentsListPageState extends State<StudentsListPage> {
-  List<Student> students =
-      []; // Lista de estudiantes, debe ser populada según tu lógica
+  List<bool> attendanceList = []; // Lista de asistencia
 
   @override
   void initState() {
     super.initState();
 
-    //TODO: Cargar lista de estudiantes
-    students = List.generate(
-      10,
-      (index) => Student(
-        id: index + 1,
-        name: 'Estudiante ${index + 1}',
-        age: 20 + index,
-        attendance: false,
-      ),
-    );
+    // Inicializar la lista de asistencia con el tamaño de la lista de estudiantes
+    attendanceList = List<bool>.filled(widget.students.length, false);
   }
 
   @override
@@ -93,11 +86,15 @@ class _StudentsListPageState extends State<StudentsListPage> {
   Widget _buildStudentsList() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: students.map((student) => _buildStudentCard(student)).toList(),
+      children: widget.students.asMap().entries.map((entry) {
+        int index = entry.key;
+        User student = entry.value;
+        return _buildStudentCard(student, index);
+      }).toList(),
     );
   }
 
-  Widget _buildStudentCard(Student student) {
+  Widget _buildStudentCard(User student, int index) {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -110,22 +107,22 @@ class _StudentsListPageState extends State<StudentsListPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  student.name,
+                  student.username,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'Edad: ${student.age}',
+                  'Email: ${student.email}',
                   style: const TextStyle(fontSize: 16),
                 ),
               ],
             ),
             Switch(
-              value: student.attendance,
+              value: attendanceList[index],
               onChanged: (value) {
                 setState(() {
-                  student.attendance = value;
+                  attendanceList[index] = value;
                 });
               },
               activeColor: Colors.blue,
@@ -156,18 +153,4 @@ class _StudentsListPageState extends State<StudentsListPage> {
         return 'Día desconocido';
     }
   }
-}
-
-class Student {
-  final int id;
-  final String name;
-  final int age;
-  bool attendance;
-
-  Student({
-    required this.id,
-    required this.name,
-    required this.age,
-    this.attendance = false,
-  });
 }
